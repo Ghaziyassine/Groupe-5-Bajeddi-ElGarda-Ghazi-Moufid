@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        select, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        select:focus, textarea:focus, button:focus {
+            outline: none;
+            border-color: #0056b3;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulation Results</h1>
+    </header>
+
+    <div class="container">
+        <form method="POST" action="{% url 'simulate' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="algorithm">Choose an Algorithm:</label>
+                <select name="algorithm" id="algorithm" required>
+                    <option value="FCFS">FCFS</option>
+                    <option value="SJF">SJF</option>
+                    <option value="RM">RM</option>
+                    <option value="DM">DM</option>
+                    <option value="LLF">LLF</option>
+                    <option value="EDF">EDF</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="tasks">Tasks (JSON Format):</label>
+                <textarea name="tasks" id="tasks" rows="5" cols="50" required>
+[{"id": 1, "arrival_time": 0, "execution_time": 3, "deadline": 7, "period": 10},
+{"id": 2, "arrival_time": 2, "execution_time": 6, "deadline": 8, "period": 15},
+{"id": 3, "arrival_time": 4, "execution_time": 4, "deadline": 10, "period": 20}]
+                </textarea>
+            </div>
+
+            <button type="submit">Run Simulation</button>
+        </form>
+
+        {% if result %}
+            <h2>Results</h2>
+            <pre>{{ result }}</pre>
+        {% endif %}
+
+        {% if steps %}
+            <h2>Steps</h2>
+            <pre>{{ steps }}</pre>
+        {% endif %}
+
+        {% if gantt_chart %}
+            <h2>Gantt Chart</h2>
+            <img src="{{ gantt_chart }}" alt="Gantt Chart" />
+        {% endif %}
+    </div>
+
+</body>
+</html>
